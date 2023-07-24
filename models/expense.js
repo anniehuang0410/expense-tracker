@@ -8,7 +8,6 @@ const expenseSchema = new Schema ({
   },
   date: {
     type: Date, // 資料型別是日期
-    default: Date
   },
   amount: {
     type: Number, // 資料型別是數字
@@ -19,8 +18,7 @@ const expenseSchema = new Schema ({
   },
   // v1.不能自行新增版本
   categoryId: {
-    type: Number,
-    //required: true
+
   }
 })
 module.exports = mongoose.model('Expense', expenseSchema)

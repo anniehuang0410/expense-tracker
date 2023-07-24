@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
-const category = require('./category.json')
 const Expense = require('../expense')
+
+// require data
+const record = require('./record.json')
+const category = require('./category.json')
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -13,12 +16,12 @@ db.on('error', () => {
 })
 db.once('open', () => {
   console.log('MongoDB connected!')
-  for(let i = 0; i < 5; i++) {
-    Expense.create({
-      name: `"expense-${i}"`,
-      date: Date(),
-      categoryId: category[i].id
-    })
+  for(let i = 0; i < record.length; i++) {
+    let { name, date, amount, categoryId } = record[i]
+    //console.log(`name: ${name}`, `date: ${date}`)
+    Expense.create({ name, date, amount, categoryId })
   }
+    
+    
   console.log('done!')
 })

@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose') // 載入 mongoose
 const exphbs = require('express-handlebars') // 載入 handlebars
+const Expense = require('./models/expense')
 
 const PORT = 3000
 
@@ -25,7 +26,16 @@ db.once('open', () => {
 })
 
 app.get('/', (req, res) => {
-  res.render('index')
+  Expense.find()
+    .lean()
+    .then(expenses => {
+      expenses.map(expense => {
+        expense.date = new Date(expense.date).toISOString().slice(0, 10)
+      })
+      return expenses
+    })
+    .then(expense => res.render('index', { expense }))
+    .catch(err => console.log(err))
 })
 
 app.listen(PORT, () => {
