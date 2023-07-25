@@ -28,15 +28,17 @@ db.once('open', () => {
 
 // render index page
 app.get('/', (req, res) => {
+  let totalAmount = 0
   Expense.find()
     .lean()
     .then(expenses => {
       expenses.map(expense => {
         expense.date = new Date(expense.date).toISOString().slice(0, 10)
+        totalAmount += expense.amount // 總金額
       })
       return expenses
     })
-    .then(expense => res.render('index', { expense }))
+    .then(expense => res.render('index', { expense, totalAmount }))
     .catch(err => console.log(err))
 })
 
