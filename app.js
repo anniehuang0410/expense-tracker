@@ -15,6 +15,7 @@ mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlP
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+app.use(express.urlencoded({ extended: true }))
 
 // 取得資料庫連線狀態
 const db = mongoose.connection
@@ -25,6 +26,7 @@ db.once('open', () => {
   console.log('MongoDB connected!')
 })
 
+// render index page
 app.get('/', (req, res) => {
   Expense.find()
     .lean()
@@ -35,6 +37,18 @@ app.get('/', (req, res) => {
       return expenses
     })
     .then(expense => res.render('index', { expense }))
+    .catch(err => console.log(err))
+})
+
+// render new page
+app.get('/expenses/new', (req, res) => {
+  return res.render('new')
+})
+// add new expenses
+app.post('/expenses', (req, res) => {
+  const { name, date, categoryId, amount } = req.body
+  return Expense.create({ name, date, categoryId, amount })
+    .then(() => res.redirect('/'))
     .catch(err => console.log(err))
 })
 
