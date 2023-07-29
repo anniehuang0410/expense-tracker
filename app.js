@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose') // 載入 mongoose
 const exphbs = require('express-handlebars') // 載入 handlebars
 const Expense = require('./models/expense')
+const Category = require('./models/category') 
 
 const PORT = 3000
 
@@ -48,8 +49,69 @@ app.get('/expenses/new', (req, res) => {
 })
 // add new expenses
 app.post('/expenses', (req, res) => {
-  const { name, date, categoryId, amount } = req.body
-  return Expense.create({ name, date, categoryId, amount })
+  let { name, date, categoryId, amount } = req.body
+  Promise (
+    categoryId = Category.findOne({ form_id: categoryId })
+      .lean()
+      .then(category => {
+        categoryId = category._id
+        return categoryId
+      })
+      .then(categoryId => {
+        Expense.create({ name, date, categoryId, amount })
+        .then(() => res.redirect('/'))
+        .catch(err => console.log(err))
+      })
+  )
+  .catch(err => console.log(err))
+})
+
+// render edit page
+app.get('/expenses/:id/edit', (req, res) => {
+  const id = req.params.id
+  let expenseDate = ''
+  let categoryName = ''
+  Expense.findById(id)
+    .lean()
+    .then(expense => {
+        expenseDate = new Date(expense.date).toISOString().slice(0, 10)
+        return expense
+      })
+    .then(expense => {
+      const categoryId = expense.categoryId
+      Category.findById(categoryId)
+          .then(category => {
+            categoryName = category.name
+            return expense
+          })  
+    .then(expense => res.render('edit', { expense, categoryName, expenseDate }))      
+    .catch(err => console.log(err))      
+  }) 
+})
+// save edit
+app.post('/expenses/:id/edit', (req, res) => {
+  const id = req.params.id
+  let { name, date, amount, categoryId } = req.body
+  Expense.findById(id)
+    .then(expense => {
+      Category.findOne({ form_id: categoryId })
+      .then(category => {
+        categoryId = category._id
+        return categoryId
+      })
+      .then(categoryId => {
+        expense.categoryId = categoryId
+        return categoryId
+      })
+      .catch(err => console.log(err))
+      return expense.save()
+     })
+    .then(expense => {
+      expense.name = name
+      expense.date = date
+      expense.amount = amount
+      return expense.save()
+     }) 
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))
 })

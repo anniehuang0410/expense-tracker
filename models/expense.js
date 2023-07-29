@@ -17,7 +17,10 @@ const expenseSchema = new Schema ({
   },
   // v1.不能自行新增版本
   categoryId: {
-
+    type: Schema.Types.ObjectId,
+    ref: 'Category',
+    index: true,
+    required: true
   }
 })
 module.exports = mongoose.model('Expense', expenseSchema)

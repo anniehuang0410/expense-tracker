@@ -1,16 +1,28 @@
 <div class="row my-5">
   <div class="col-md-6 m-auto mb-3">
     <div class="card card-body">
-      <h1 class="text-center mt-3">總金額：{{totalAmount}}</h1>
+      <h1 class="text-center my-3">總金額：{{totalAmount}}</h1>
       <div class="list-container">
-        <ul class="list-group list-group-flush">            
+        <ul class="list-group list-group-flush mt-3">            
           {{#each expense}}
-          <li class="list-group-item">
-            <i class="fa-solid me-2"></i>
-            <div class="per-expense">
-              {{this.date}}
-              {{this.name}}
-              {{this.amount}}
+          <li class="row list-group-item">
+            <div class="per-expense row d-flex align-items-center">
+              <div class="col-2">
+                <i class="fa-solid me-2"></i>
+              </div>
+              <div class="col-6">
+                <h4 class="mt-1">{{this.name}}</h5>
+                <h5>{{this.date}}</h5>
+              </div>
+              <div class="col-2">
+                <span class="h4">{{this.amount}}</span>
+              </div>
+              <div class="col-2">
+                <a class="btn btn-success mb-1" href="/expenses/{{this._id}}/edit">修改</a>
+                <form action="/expenses/{{this._id}}/delete" method="POST" style="display: inline;">
+                  <button type="submit" class="btn btn-danger text-white">刪除</button>
+                </form>
+              </div>
             </div>
           </li>
           {{/each}}
@@ -19,7 +31,7 @@
     </div>
   </div>
   <div class="d-flex justify-content-center add-button mt-3">
-    <form action="./expenses/new">
+    <form action="/expenses/new">
       <button type="submit" class="btn btn-primary">新增支出</button>
     </form>
   </div>
