@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const db = require('../../config/mongoose')
 const Expense = require('../expense')
 const Category = require('../category')
 
@@ -6,15 +6,6 @@ const Category = require('../category')
 const record = require('./record.json')
 const category = require('./category.json')
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-
-const db = mongoose.connection
-db.on('error', () => {
-  console.log('MongoDB error.')
-})
 db.once('open', () => {
   console.log('MongoDB connected!')
   // create category
