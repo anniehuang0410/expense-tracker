@@ -8,7 +8,7 @@
           <li class="row list-group-item">
             <div class="per-expense row d-flex align-items-center">
               <div class="col-2">
-                <i class="fa-solid {{this.Category.icon}} me-2"></i>
+                <i class="fa-solid {{this.categoryId}} me-2"></i>
               </div>
               <div class="col-6">
                 <h4 class="mt-1">{{this.name}}</h5>
@@ -19,7 +19,7 @@
               </div>
               <div class="col-2">
                 <a class="btn btn-success mb-1" href="/expenses/{{this._id}}/edit">修改</a>
-                <form action="/expenses/{{this._id}}/delete" method="POST" style="display: inline;">
+                <form action="/expenses/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
                   <button type="submit" class="btn btn-danger text-white">刪除</button>
                 </form>
               </div>

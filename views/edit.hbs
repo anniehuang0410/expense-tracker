@@ -5,7 +5,7 @@
       <h1 class="text-center mt-3">請輸入你的支出</h1>
 
       <div class="form-container d-flex justify-content-center p-0 mt-3">
-        <form action="/expenses/{{expense._id}}/edit" method="POST" class="row w-50 mt-3" id="input-container">
+        <form action="/expenses/{{expense._id}}?_method=PUT" method="POST" class="row w-50 mt-3" id="input-container">
 
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">名稱</span>

@@ -1,6 +1,8 @@
 const express = require('express')
 const mongoose = require('mongoose') // 載入 mongoose
 const exphbs = require('express-handlebars') // 載入 handlebars
+const methodOverride = require('method-override') // 載入 method-override
+
 const Expense = require('./models/expense')
 const Category = require('./models/category') 
 
@@ -14,10 +16,6 @@ if(process.env.NODE_ENV !== 'production') {
 const app = express()
 mongoose.connect(process.env.MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true }) // 設定連線到 mongoDB
 
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
-app.set('view engine', 'hbs')
-app.use(express.urlencoded({ extended: true }))
-
 // 取得資料庫連線狀態
 const db = mongoose.connection
 db.on('error', () => {
@@ -26,6 +24,13 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('MongoDB connected!')
 })
+
+// set view engine
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
+
+app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 
 // render index page
 app.get('/', (req, res) => {
@@ -50,9 +55,8 @@ app.get('/expenses/new', (req, res) => {
 // add new expenses
 app.post('/expenses', (req, res) => {
   let { name, date, categoryId, amount } = req.body
-  Promise (
+  Promise.all (
     categoryId = Category.findOne({ form_id: categoryId })
-      .lean()
       .then(category => {
         categoryId = category._id
         return categoryId
@@ -89,7 +93,7 @@ app.get('/expenses/:id/edit', (req, res) => {
   }) 
 })
 // save edit
-app.post('/expenses/:id/edit', (req, res) => {
+app.put('/expenses/:id', (req, res) => {
   const id = req.params.id
   let { name, date, amount, categoryId } = req.body
   Expense.findById(id)
@@ -117,7 +121,7 @@ app.post('/expenses/:id/edit', (req, res) => {
 })
 
 // delete 
-app.post('/expenses/:id/delete', (req, res) => {
+app.delete('/expenses/:id', (req, res) => {
   const id = req.params.id
   return Expense.findById(id)
     .then(expense => expense.remove())
