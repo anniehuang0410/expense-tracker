@@ -6,11 +6,12 @@ const router = express.Router()
 const home = require('./modules/home')
 const expense = require('./modules/expense')
 const user = require('./modules/user')
+const { authenticator } = require('../middleware/auth') // 引入 middleware
 
 // 使用路由模組
-router.use('/', home)
-router.use('/expenses', expense)
+router.use('/expenses', authenticator, expense) // 加入驗證程序
 router.use('/users', user)
+router.use('/', authenticator, home)
 
 // 匯出路由器
 module.exports = router
