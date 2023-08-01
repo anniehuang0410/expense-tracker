@@ -12,7 +12,7 @@ require('./config/mongoose')
 const Expense = require('./models/expense')
 const Category = require('./models/category') 
 
-const PORT = 3000
+const PORT = process.env.PORT
 
 const app = express()
 
@@ -22,7 +22,7 @@ app.set('view engine', 'hbs')
 
 // cookie-session
 app.use(session({
-  secret: 'ThisIsMySecret',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
