@@ -9,6 +9,7 @@ router.get('/new', (req, res) => {
 })
 // add new expenses
 router.post('/', (req, res) => {
+  const userId = req.user._id
   let { name, date, categoryId, amount } = req.body
   Promise.all(
     categoryId = Category.findOne({ form_id: categoryId })
@@ -17,7 +18,7 @@ router.post('/', (req, res) => {
         return categoryId
       })
       .then(categoryId => {
-        Expense.create({ name, date, categoryId, amount })
+        Expense.create({ name, date, categoryId, amount, userId })
           .then(() => res.redirect('/'))
           .catch(err => console.log(err))
       })
@@ -27,10 +28,11 @@ router.post('/', (req, res) => {
 
 // render edit page
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id
+  const _id = req.params.id
   let expenseDate = ''
   let categoryName = ''
-  Expense.findById(id)
+  Expense.findOne({ _id, userId })
     .lean()
     .then(expense => {
       expenseDate = new Date(expense.date).toISOString().slice(0, 10)
@@ -49,9 +51,10 @@ router.get('/:id/edit', (req, res) => {
 })
 // save edit
 router.put('/:id', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
   let { name, date, amount, categoryId } = req.body
-  Expense.findById(_id)
+  Expense.findOne({ _id, userId })
     .then(expense => {
       Category.findOne({ form_id: categoryId })
         .then(category => {
@@ -77,8 +80,9 @@ router.put('/:id', (req, res) => {
 
 // delete 
 router.delete('/:id', (req, res) => {
+  const userId = req.user._id
   const _id = req.params.id
-  return Expense.findById(_id)
+  return Expense.findOne({ _id, userId })
     .then(expense => expense.remove())
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))

@@ -4,8 +4,9 @@ const Expense = require('../../models/expense')
 
 // render index page
 router.get('/', (req, res) => {
+  const userId = req.user._id
   let totalAmount = 0
-  Expense.find()
+  Expense.find({ userId })
     .lean()
     .then(expenses => {
       expenses.map(expense => {

@@ -12,8 +12,11 @@ const expenseSchema = new Schema ({
     type: Number, // 資料型別是數字
     //required: true
   },
-  userId: {
-
+  userId: {  // 加入關聯設定
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    index: true,
+    required: true
   },
   // v1.不能自行新增版本
   categoryId: {
