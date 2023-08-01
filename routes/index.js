@@ -5,7 +5,7 @@ const router = express.Router()
 // 引入路由模組
 const home = require('./modules/home')
 const expense = require('./modules/expense')
-const user = require('./modules/user')
+const user = require('./modules/users')
 const { authenticator } = require('../middleware/auth') // 引入 middleware
 
 // 使用路由模組
