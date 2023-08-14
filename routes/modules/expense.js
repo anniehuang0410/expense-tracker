@@ -10,20 +10,35 @@ router.get('/new', (req, res) => {
 // add new expenses
 router.post('/', (req, res) => {
   const userId = req.user._id
-  let { name, date, categoryId, amount } = req.body
-  Promise.all(
-    categoryId = Category.findOne({ form_id: categoryId })
+  const { name, date, category, amount } = req.body
+  // handling error messages
+  const new_error = {}
+  if (!name || !date || !category || !amount) {
+    new_error.message = '請完成所有必填欄位！'
+  }
+  if (Object.keys(new_error).length) {
+    return res.render('new', {
+      new_error,
+      name,
+      date,
+      category,
+      amount
+    })
+  }
+    return Category.findOne({ name: category })
+      .lean() 
       .then(category => {
-        categoryId = category._id
-        return categoryId
+        req.body.categoryId = category._id
+        req.body.userId = userId
+        return req.body
       })
-      .then(categoryId => {
-        Expense.create({ name, date, categoryId, amount, userId })
-          .then(() => res.redirect('/'))
+      .then(expense => {
+        Expense.create(expense)
+          
           .catch(err => console.log(err))
       })
-  )
-    .catch(err => console.log(err))
+      .then(() => res.redirect('/'))
+      .catch(err => console.log(err))
 })
 
 // render edit page
@@ -53,27 +68,15 @@ router.get('/:id/edit', (req, res) => {
 router.put('/:id', (req, res) => {
   const userId = req.user._id
   const _id = req.params.id
-  let { name, date, amount, categoryId } = req.body
-  Expense.findOne({ _id, userId })
-    .then(expense => {
-      Category.findOne({ form_id: categoryId })
-        .then(category => {
-          categoryId = category._id
-          return categoryId
-        })
-        .then(categoryId => {
-          expense.categoryId = categoryId
-          return categoryId
-        })
-        .catch(err => console.log(err))
-      return expense.save()
+  let { categoryId } = req.body
+  return Category.findOne({ form_id: categoryId })
+    .lean()
+    .then(category => {
+      req.body.categoryId = category._id
+      req.body.userId = userId
+      return req.body
     })
-    .then(expense => {
-      expense.name = name
-      expense.date = date
-      expense.amount = amount
-      return expense.save()
-    })
+    .then(expense => Expense.updateOne({ _id, userId }, expense))
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))
 })

@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
   const userId = req.user._id
   let totalAmount = 0
   Expense.find({ userId })
+    .populate('categoryId')
     .lean()
     .then(expenses => {
       expenses.map(expense => {
@@ -32,12 +33,11 @@ router.post('/filter', (req, res) => {
     .then(category => {
       const categoryId = category._id
       return Expense.find({ categoryId, userId })
-       // .populate('categoryId')
+        .populate('categoryId')
         .lean()
         .sort({ date: -1, _id: -1 })
         .then(expenses => 
           expenses.map(expense => {
-            console.log(expense)
           expense.date = new Date(expense.date).toISOString().slice(0, 10)
           return expense
         }))

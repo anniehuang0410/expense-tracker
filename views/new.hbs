@@ -3,39 +3,42 @@
     <div class="card card-body">
       
       <h1 class="text-center mt-3">請輸入你的支出</h1>
-      
+      {{> message}}
       <div class="form-container d-flex justify-content-center p-0 mt-3">
         <form action="/expenses" method="POST" class="row w-50 mt-3" id="input-container">
         
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">名稱</span>
             <input type="text" class="form-control" aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default" name="name" placeholder="蛤？又買啥？" maxlength="15" required="required">
+              aria-describedby="inputGroup-sizing-default" name="name" placeholder="蛤？又買啥？" maxlength="15" required="required" value="{{name}}">
           </div>
         
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">日期</span>
             <input type="date" class="form-control" aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default" name="date" placeholder="怎麼那麼閒又去買東西" maxlength="15"
-              required="required">
+              aria-describedby="inputGroup-sizing-default" name="date" placeholder="怎麼那麼閒又去買東西" maxlength="15" required="required" value="{{date}}">
           </div>
         
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">類型</span>
-            <select class="form-select" aria-label="Default select example" id="categoryDataList" name="categoryId">
-              <option value="" selected>選個類別吧</option>
-              <option value="1">家居物業</option>
-              <option value="2">交通出行</option>
-              <option value="3">休閒娛樂</option>
-              <option value="4">餐飲食品</option>
-              <option value="5">其他</option>
+            <select name="category" id="category" class="form-select form-select-lg" aria-label="Default select example">
+              {{#if category}}
+              <option value="{{category}}">{{category}}</option>
+              {{else}}
+              <option value="" selected>請選擇分類</option>
+              {{/if}}
+              <option value="家居物業">&nbsp;&nbsp;&nbsp;家居物業</option>
+              <option value="交通出行">&nbsp;&nbsp;&nbsp;交通出行</option>
+              <option value="休閒娛樂">&nbsp;&nbsp;&nbsp;休閒娛樂</option>
+              <option value="餐飲食品">&nbsp;&nbsp;&nbsp;餐飲食品</option>
+              <option value="其他">&nbsp;&nbsp;&nbsp;其他</option>
             </select>
           </div>
         
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">金額</span>
             <input type="number" class="form-control" aria-label="Sizing example input"
-              aria-describedby="inputGroup-sizing-default" name="amount" placeholder="說！花了多少錢！" required="required">
+              aria-describedby="inputGroup-sizing-default" name="amount" placeholder="說！花了多少錢！" required="required" value="{{amount}}">
           </div>
         
           <div class="container d-flex justify-content-center my-3">
