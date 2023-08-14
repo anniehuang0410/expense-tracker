@@ -1,5 +1,23 @@
 <div class="row my-5">
   <div class="col-md-6 m-auto mb-3">
+    <div class="col-sm-6 m-auto mb-3">
+      <form action="/filter" method="POST">
+        <select name="category" id="category" class="form-select form-select-lg" aria-label="Default select example"
+          onchange="this.form.submit();">
+          {{#if selectedCategory}}
+          <option value="{{selectedCategory}}">{{selectedCategory}}</option>
+          {{else}}
+          <option selected>篩選類別</option>
+          {{/if}}
+          <option value="">&nbsp;&nbsp;&nbsp;全部</option>
+          <option value="家居物業">&nbsp;&nbsp;&nbsp;家居物業</option>
+          <option value="交通出行">&nbsp;&nbsp;&nbsp;交通出行</option>
+          <option value="休閒娛樂">&nbsp;&nbsp;&nbsp;休閒娛樂</option>
+          <option value="餐飲食品">&nbsp;&nbsp;&nbsp;餐飲食品</option>
+          <option value="其他">&nbsp;&nbsp;&nbsp;其他</option>
+        </select>
+      </form>
+    </div>
     <div class="card card-body">
       <h1 class="text-center my-3">總金額：{{totalAmount}}</h1>
       <div class="list-container">
