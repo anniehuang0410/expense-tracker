@@ -18,18 +18,18 @@
             <span class="input-group-text" id="inputGroup-sizing-default">日期</span>
             <input type="date" class="form-control" aria-label="Sizing example input"
               aria-describedby="inputGroup-sizing-default" name="date" placeholder="怎麼那麼閒又去買東西" maxlength="15"
-              required="required" value="{{expenseDate}}">
+              required="required" value="{{expense.date}}">
           </div>
 
           <div class="input-group mb-3 p-0">
             <span class="input-group-text" id="inputGroup-sizing-default">類型</span>
-            <select class="form-select" aria-label="Default select example" id="categoryDataList" name="categoryId">
-              <option value="" placeholder="選個類別吧" selected>{{#if categoryName}}{{categoryName}}{{/if}}</option>
-              <option value="1">家居物業</option>
-              <option value="2">交通出行</option>
-              <option value="3">休閒娛樂</option>
-              <option value="4">餐飲食品</option>
-              <option value="5">其他</option>
+            <select name="category" id="category" class="form-select form-select-lg" aria-label="Default select example">
+              <option value="{{expense.categoryId.name}}">{{expense.categoryId.name}}</option>
+              <option value="家居物業">&nbsp;&nbsp;&nbsp;家居物業</option>
+              <option value="交通出行">&nbsp;&nbsp;&nbsp;交通出行</option>
+              <option value="休閒娛樂">&nbsp;&nbsp;&nbsp;休閒娛樂</option>
+              <option value="餐飲食品">&nbsp;&nbsp;&nbsp;餐飲食品</option>
+              <option value="其他">&nbsp;&nbsp;&nbsp;其他</option>
             </select>
           </div>
 

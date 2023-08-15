@@ -45,31 +45,22 @@ router.post('/', (req, res) => {
 router.get('/:id/edit', (req, res) => {
   const userId = req.user._id
   const _id = req.params.id
-  let expenseDate = ''
-  let categoryName = ''
-  Expense.findOne({ _id, userId })
+  return Expense.findOne({ _id, userId })
+    .populate('categoryId')
     .lean()
     .then(expense => {
-      expenseDate = new Date(expense.date).toISOString().slice(0, 10)
+      expense.date = new Date(expense.date).toISOString().slice(0, 10)
       return expense
     })
-    .then(expense => {
-      const categoryId = expense.categoryId
-      Category.findById(categoryId)
-        .then(category => {
-          categoryName = category.name
-          return expense
-        })
-        .then(expense => res.render('edit', { expense, categoryName, expenseDate }))
-        .catch(err => console.log(err))
-    })
+    .then(expense => res.render('edit', { expense }))
+    .catch(error => console.log(error))
 })
 // save edit
 router.put('/:id', (req, res) => {
   const userId = req.user._id
   const _id = req.params.id
-  let { categoryId } = req.body
-  return Category.findOne({ form_id: categoryId })
+  const { category } = req.body
+  return Category.findOne({ name: category })
     .lean()
     .then(category => {
       req.body.categoryId = category._id
@@ -77,8 +68,8 @@ router.put('/:id', (req, res) => {
       return req.body
     })
     .then(expense => Expense.updateOne({ _id, userId }, expense))
-    .then(() => res.redirect('/'))
-    .catch(err => console.log(err))
+    .then(() => res.redirect(`/`))
+    .catch(error => console.log(error))
 })
 
 // delete 
