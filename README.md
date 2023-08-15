@@ -107,4 +107,4 @@ ctrl + c
 
 ## Developer
 
-This project was developed by Annie Huang.
+This project was developed by [Annie Huang](https://github.com/anniehuang0410).
